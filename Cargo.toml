@@ -1,0 +1,20 @@
+[package]
+name = "subject_randomizer"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[dependencies]
+clap = { version = "4.6.0", features = ["cargo", "derive"] }
+dotenvy = "0.15.7"
+rand = "0.10.0"
+rusqlite = "0.39.0"
+slint = "1.15.1"
+thiserror = "2.0.18"
+
+
+[build-dependencies]
+slint-build = "1.15.1"
+
+[lints.rust]
+unused = "allow"
