@@ -1,27 +1,27 @@
 use clap::Parser;
 
-use crate::{handles::{init_db, randomize::rand}, structs::{Cli, cli::HalaBira}};
+use crate::{errors::AppError, handles::init_db, structs::Cli};
 
 slint::include_modules!();
 
 mod errors;
-mod structs;
 mod handles;
+mod structs;
+
 fn main() {
+    if let Err(err) = run() {
+        eprintln!("{err}");
+        std::process::exit(1);
+    }
+}
+
+fn run() -> Result<(), AppError> {
     // for now utilize a pre-made database
     // extract contents from the db
     // and get a random subject/topic
-    let conn = init_db("./pharma_subs.db").unwrap();
+    let conn = init_db("./pharma_subs.db")?;
 
     let args = Cli::parse();
 
-    match args.command {
-        HalaBira::Exe => { args.command.execute(conn).unwrap()}
-    }
-    
-//    let res = rand(conn).unwrap();
-//    println!("{res}");
-    
+    args.command.execute(conn)
 }
-
-
