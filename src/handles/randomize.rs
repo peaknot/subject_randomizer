@@ -121,3 +121,7 @@ pub fn rand_topic(connection: Connection) -> Result<Topic, AppError> {
 
     Ok(result)
 }
+
+pub fn update(connection: Connection) -> Result<(), AppError> {
+    todo!()
+}
