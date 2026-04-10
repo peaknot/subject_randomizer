@@ -5,7 +5,7 @@ use crate::{
     structs::{Module, Subject, Topic, module::Randomized},
 };
 
-pub fn rand(connection: Connection) -> Result<Randomized, AppError> {
+pub fn rand(connection: &Connection) -> Result<Randomized, AppError> {
     let mut stmt = connection.prepare(
         "
         WITH random_module AS (
@@ -66,7 +66,7 @@ pub fn rand(connection: Connection) -> Result<Randomized, AppError> {
     Ok(result)
 }
 
-pub fn rand_module(connection: Connection) -> Result<Module, AppError> {
+pub fn rand_module(connection: &Connection) -> Result<Module, AppError> {
     let mut stmt = connection.prepare(
         "
             SELECT id, mod_name FROM module
@@ -84,7 +84,7 @@ pub fn rand_module(connection: Connection) -> Result<Module, AppError> {
     Ok(result)
 }
 
-pub fn rand_subject(connection: Connection) -> Result<Subject, AppError> {
+pub fn rand_subject(connection: &Connection) -> Result<Subject, AppError> {
     let mut stmt = connection.prepare(
         "
             SELECT * FROM subject
@@ -103,7 +103,7 @@ pub fn rand_subject(connection: Connection) -> Result<Subject, AppError> {
     Ok(result)
 }
 
-pub fn rand_topic(connection: Connection) -> Result<Topic, AppError> {
+pub fn rand_topic(connection: &Connection) -> Result<Topic, AppError> {
     let mut stmt = connection.prepare(
         "
             SELECT * FROM topic
@@ -122,6 +122,6 @@ pub fn rand_topic(connection: Connection) -> Result<Topic, AppError> {
     Ok(result)
 }
 
-pub fn update(connection: Connection) -> Result<(), AppError> {
+pub fn update(connection: &Connection) -> Result<(), AppError> {
     todo!()
 }

@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{errors::AppError, handles::init_db, structs::Cli};
+use crate::{errors::AppError, handles::init_db, structs::{AppState, Cli}};
 
 slint::include_modules!();
 
@@ -13,15 +13,27 @@ fn main() {
         eprintln!("{err}");
         std::process::exit(1);
     }
+    if let Err(err) = app_window() {
+        eprintln!("{err}");
+        std::process::exit(1);
+    }
+    
 }
 
 fn run() -> Result<(), AppError> {
-    // for now utilize a pre-made database
-    // extract contents from the db
-    // and get a random subject/topic
+    
     let conn = init_db("./pharma_subs.db")?;
+
+    let app_state = AppState { db: conn};
 
     let args = Cli::parse();
 
-    args.command.execute(conn)
+    args.command.execute(app_state.db)
+    
+}
+
+fn app_window() -> Result<(), slint::PlatformError> {
+    let main_window = AppWindow::new()?;
+
+    main_window.run()
 }

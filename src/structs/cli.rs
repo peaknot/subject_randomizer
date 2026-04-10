@@ -27,10 +27,10 @@ pub enum HalaBira {
 impl HalaBira {
     pub fn execute(self, conn: Connection) -> Result<(), AppError> {
         match self {
-            HalaBira::Exe => println!("{}", rand(conn)?),
-            HalaBira::Mod => println!("{}", rand_module(conn)?),
-            HalaBira::Sub => println!("{}", rand_subject(conn)?),
-            HalaBira::Tpc => println!("{}", rand_topic(conn)?),
+            HalaBira::Exe => println!("{}", rand(&conn)?),
+            HalaBira::Mod => println!("{}", rand_module(&conn)?),
+            HalaBira::Sub => println!("{}", rand_subject(&conn)?),
+            HalaBira::Tpc => println!("{}", rand_topic(&conn)?),
         }
 
         Ok(())

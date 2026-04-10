@@ -1,21 +1,160 @@
-export component SubjectRand {
-    width: 500px;
+export struct Randomized {
+    module_name: string,
+    subject_name: string,
+    topic_name: string,
+}
+component Button inherits Rectangle {
+    in-out property text <=> txt.text;
+    in property <bool> checkable: false;
+    in-out property <bool> is-checked: false;
+    callback clicked(bool);
+
+    border-radius: root.height / 2;
+    border-width: 1px;
+
+    background: is-checked ? #576A8F : touch.has-hover ? #81A6C6 :  #9ec3d2;
+    height: txt.preferred-height * 1.33;
+    min-width: txt.preferred-width + 20px;
+    txt := Text {
+        x: (parent.width - self.width)/2 + (touch.pressed ? 2px : 0);
+        y: (parent.height - self.height)/2 + (touch.pressed ? 1px : 0);
+        color: is-checked ? #fff : #27262a;
+        font-family: "Comic Sans MS";
+        font-weight: 800;
+        font-italic: true;
+        letter-spacing: 0;
+        
+    }
+    touch := TouchArea { 
+        clicked => {
+            if (root.checkable) {
+                root.is-checked = !root.is-checked;
+            }
+            root.clicked(is-checked)
+        }
+        
+    }
+}
+
+export component AppWindow inherits Window {
+    background: #ffffff;
+    width: 450px;
     height: 300px;
 
-    Rectangle {
-        height: 50px;
-        width: 300px;
-        background: #ead4c2;
-        border-radius: 10px;
+    property <bool> mod-checked: false;
+    property <bool> sub-checked: false;
+    property <bool> top-checked: false;
 
+    property <int> toggled-box: (root.mod-checked ? 1 : 0) + (root.sub-checked ? 1 : 0) + (root.top-checked ? 1 : 0);
+    private property <int> rendered-box: 0;
 
-        Text {
-            text: "Cooper was here!";
-            font-size: 33px;
-            font-italic: true;
-            color: #227671;
+    VerticalLayout {
+        width: 100%;
+        height: 100%;
+        spacing: 20px;
+        padding: 20px;
+
+        HorizontalLayout {
+            width: 100%;
+            alignment: center;
+ 
+            Rectangle {
+                
+                width: 50%;
+                height: 50px;
+                border-radius: 15px;
+                background: #D2C4B4;
+
+                Text { 
+                    text: "Randomizer";
+                    font-family: "Comic Sans MS";
+                    font-size: 15px;
+                    font-weight: 700;
+                    letter-spacing: 4px;
+                    color: #3b3838;
+                
+                }
+            }
+        }
+
+        HorizontalLayout {
+            width: 100%;
+            spacing: 20px;
+            alignment: center;
+
+            Button {
+                width: 30px;
+                height: 30px;
+                border-radius: 5px;
+                background: #eab4b4;
+                text: "R";
+                clicked => {
+                    root.mod-checked = false;
+                    root.sub-checked = false;
+                    root.top-checked = false;
+                    root.rendered-box = 0;
+
+                }
+            }
+
+            Button {
+                width: 150px;
+                height: 30px;
+                border-radius: 5px;
+                text: "randomize";
+                clicked => { 
+                    root.rendered-box = root.toggled-box; 
+                }
+            }
+            HorizontalLayout {
+                spacing: 10px;
+
+                Button {
+                    border-radius: 5px;
+                    height: 30px;
+                    background: #566291;
+                    text: "module";
+                    checkable: true;
+                    is-checked <=>  root.mod-checked;
+
+                }
+                
+                Button {
+                    border-radius: 5px;
+                    height: 30px;
+                    background: #607B8F;
+                    text: "subject";
+                    checkable: true;
+                    is-checked <=> root.sub-checked;
+                }
+                
+                Button {
+                    border-radius: 5px;
+                    height: 30px;
+                    background: #E97F4A;
+                    text: "topic";
+                    checkable: true;
+                    is-checked <=> root.top-checked;
+                }
+            }
+        }
+        VerticalLayout {
+            width: 100%;
+            spacing: 15px;
+            alignment: center;
+
+            for i in root.rendered-box: Rectangle {
+                x: 30px;
+                width: 350px;
+                height: 30px;
+                background: #F3E3D0;
+                border-radius: 10px;
+                Text {
+                    text: "Count:" + (i + 1);
+                    color: black;
+                }
+                
+            }
         }
     }
-
-    
 }
