@@ -3,7 +3,7 @@ use rusqlite::Connection;
 
 use crate::{
     errors::AppError,
-    structs::{Module, Subject, Topic, module::Randomized},
+    structs::{Module, Subject, Topic, module::{RandObject, Randomized}},
 };
 
 pub fn rand(connection: &Connection) -> Result<Randomized, AppError> {
@@ -135,16 +135,54 @@ pub fn query_topic(connection: &Connection) -> Result<Vec<String>, AppError> {
 
     Ok(result)
 }
+pub fn query_obj(connection: &Connection) -> Result<Vec<RandObject>, AppError> {
+
+    let mut stmt = connection.prepare(
+        "
+            SELECT 
+                t.topic_name,
+                s.subj_name,
+                m.id AS mod_id
+            FROM 
+                topic t
+            JOIN 
+                subject s ON t.subj_id = s.id
+            JOIN 
+                module m ON s.mod_id = m.id
+            ORDER BY RANDOM();
+        "
+    )?;
+    let data_obj: Vec<RandObject>  = stmt.query_map(
+        [], 
+        |row| {
+            Ok(RandObject {
+                topic_name: row.get(0)?,
+                subj_name: row.get(1)?,
+                mod_id: row.get(2)?
+            })
+        }
+    )?.collect::<Result<Vec<RandObject>,_>>()?;
+
+    Ok(data_obj)
+}
 
 #[cfg(test)]
 mod test {
     use super::*;
-
+    
     #[test]
     fn successful_query() {
         let conn = Connection::open("./pharma_subs.db").unwrap();
         let subjects = query_topic(&conn).unwrap();
 
-        assert_eq!(172, subjects.len())
+        assert_eq!(subjects.len(), 172)
+    }
+    #[test]
+
+    fn successful_query_of_rand_object() {
+        let conn = Connection::open("./pharma_subs.db").unwrap();
+        let datas = query_obj(&conn).unwrap();
+
+        assert_eq!(datas.len(), 172)
     }
 }

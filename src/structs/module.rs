@@ -68,3 +68,20 @@ impl Randomized {
         )
     }
 }
+
+#[derive(Clone, PartialEq, Default)]
+pub struct RandObject {
+    pub mod_id: i64,
+    pub subj_name: String,
+    pub topic_name: String
+}
+
+impl RandObject {
+    pub fn new() -> RandObject {
+        RandObject {
+            mod_id: 0,
+            topic_name: String::new(),
+            subj_name: String::new()
+        }
+    }
+}
