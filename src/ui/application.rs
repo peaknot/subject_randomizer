@@ -8,7 +8,7 @@ use crate::{handles::init_db, structs::AppState, ui::*};
 #[component]
 pub fn app() -> Element {
     use_context_provider(|| -> AppState {
-        init_db("./pharma_subs.db").unwrap()
+        init_db().unwrap()
     });
     rsx! {
         Card { }

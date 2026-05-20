@@ -1,7 +1,6 @@
 use std::time::Duration;
 
-use dioxus::html::g::to;
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use rand::seq::SliceRandom;
 use rusqlite::Connection;
@@ -34,24 +33,31 @@ pub fn Card() -> Element {
             div { 
                 class: "header",
                 "Subject Randomizer"
-        }
+            }
             div {  
                 class: "circle-container",
                 div { 
-                    class: "circle",
+                    class: if is_animating() { "circle animating" } else { "circle" },
                     div { 
                         class: "obj-data",
                         
                         if !is_animating() && mod_id == 0 {
-                            p { id: "placeholder", "Press Randomize to begin!"}
+                            h2 { id: "welcome-greeting", "Hello!" }
+                            p { id: "placeholder", "Ready to study? Press Randomize to pick a topic." }
                         } else {
-                            if !is_animating() { p { id: "module", "Module: {mod_id}" }}
+                            // Show module only when not animating
+                            if !is_animating() { 
+                                p { id: "module", "Module {mod_id}" }
+                            }
+
+                            p { 
+                                id: "topic",
+                                "{topic_name}"
+                            }
                         }
 
-                        p { id: "topic", "{topic_name}"}
-
                         if !is_animating() && !subj_name.is_empty() {
-                            p { id: "subject", "Subject: {subj_name}"}
+                            p { id: "subject", "{subj_name}"}
                         }
                      }
                 }
@@ -83,10 +89,6 @@ pub fn RandTopic(
                 let conn = db.pool.lock().unwrap();
                 query_obj(&conn).unwrap()
             }).await.unwrap();
-            // let topics = tokio::task::spawn_blocking(move || {
-            //     let conn = db.pool.lock().unwrap();
-            //     query_topic(&conn).unwrap()
-            // }).await.unwrap();
 
             let timeout = tokio::time::sleep(Duration::from_secs(3));
             tokio::pin!(timeout);
@@ -97,7 +99,7 @@ pub fn RandTopic(
                         is_animating.set(false);
                         break;
                     }
-                    _ = tokio::time::sleep(Duration::from_nanos(100)) => {
+                    _ = tokio::time::sleep(Duration::from_millis(50)) => {
                         topic.set(topics
                             .choose(&mut rand::rng())
                             .cloned()
@@ -116,22 +118,23 @@ pub fn RandTopic(
         is_animating.set(false);
     };
 
+    let reset_class = if id != 0 && !is_animating() { "reset-button" } else { "reset-button hidden" };
+
+    let rand_btn_class = if is_animating() { "rand-button animating" } else { "rand-button" };
+
     rsx! {
         div { 
             class: "button-container",
             button { 
-                class: "rand-button",
+                class: "{rand_btn_class}",
                 onclick: on_click,
                 if is_animating() {"STOP"} else {"RANDOMIZE"}
             }
-            if id != 0 && !is_animating() {
-                button { 
-                    class: "reset-button",
-                    onclick: on_reset,
-                    "RESET"
-                }
+            button { 
+                class: "{reset_class}",
+                onclick: on_reset,
+                "RESET"
             }
-            
         }
     }
 }
