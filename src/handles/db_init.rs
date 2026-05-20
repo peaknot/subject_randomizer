@@ -21,7 +21,6 @@ pub fn db_path() -> PathBuf {
         return local_path;
     }
 
-    
     let mut path = dirs::data_local_dir()
         .expect("could not find data dir");
     path.push("subject_randomizer");

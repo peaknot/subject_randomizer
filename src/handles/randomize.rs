@@ -1,4 +1,3 @@
-use dioxus::html::g::to;
 use rusqlite::Connection;
 
 use crate::{

@@ -20,7 +20,3 @@ web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
 
-[lints.rust]
-unused_imports = "allow"
-
-
