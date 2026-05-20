@@ -1,4 +1,6 @@
+use std::sync::{Arc, Mutex};
 
+#[derive(Clone)]
 pub struct AppState {
-    pub db: rusqlite::Connection
+    pub pool: Arc<Mutex<rusqlite::Connection>>
 }

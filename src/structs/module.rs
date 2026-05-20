@@ -30,6 +30,9 @@ impl Display for Topic {
         writeln!(f, "{}", self.topic_name)
     }
 }
+impl Topic {
+    pub fn get_name(self) -> String { self.topic_name }
+}
 
 pub struct Randomized {
     pub module_id: i64,

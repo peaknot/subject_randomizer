@@ -1,3 +1,4 @@
+use dioxus::html::g::to;
 use rusqlite::Connection;
 
 use crate::{
@@ -121,7 +122,29 @@ pub fn rand_topic(connection: &Connection) -> Result<Topic, AppError> {
 
     Ok(result)
 }
+pub fn query_topic(connection: &Connection) -> Result<Vec<String>, AppError> {
+    let mut stmt = connection.prepare(
+        "
+            SELECT topic_name FROM topic
+            ORDER BY RANDOM();
+        "
+    )?;
+    let result = stmt
+        .query_map([], |row| row.get::<_, String>(0))?
+        .collect::<Result<Vec<String>, _>>()?;
 
-pub fn update(connection: &Connection) -> Result<(), AppError> {
-    todo!()
+    Ok(result)
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn successful_query() {
+        let conn = Connection::open("./pharma_subs.db").unwrap();
+        let subjects = query_topic(&conn).unwrap();
+
+        assert_eq!(172, subjects.len())
+    }
 }
