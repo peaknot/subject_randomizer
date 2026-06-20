@@ -121,7 +121,7 @@ pub fn RandTopic(
     mut topic: Signal<RandObject>, 
     mut is_animating: Signal<bool>,
     id: i64,
-    available_topics: Vec<RandObject>
+    available_topics: <RandObject>
 ) -> Element {
     let on_click = move |_| {
         if is_animating() {

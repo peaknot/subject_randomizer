@@ -6,7 +6,6 @@ asset_dir = "assets"
 [bundle]
 identifier = "com.peaknot.studyrandomizer"
 publisher = "PeaKnot"
-icon = ["assets/rand_icon.png"]
 version = "0.1.0"
 
 [web.app]
