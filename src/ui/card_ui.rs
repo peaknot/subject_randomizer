@@ -36,7 +36,7 @@ pub fn Card() -> Element {
     match &*resource_read {
         Some(Ok(topics)) => {
             rsx! {
-                document::Stylesheet { href: asset!("/assets/main.css")}
+                document::Stylesheet { href: asset!("assets/main.css")}
                 div {  
                     class: "main-container",
                     div { 
